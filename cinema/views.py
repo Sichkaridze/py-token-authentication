@@ -22,7 +22,9 @@ from cinema.serializers import (
 )
 
 
-class GenreViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin):
+class GenreViewSet(viewsets.GenericViewSet,
+                   mixins.ListModelMixin,
+                   mixins.CreateModelMixin):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     authentication_classes = (TokenAuthentication,)
@@ -33,7 +35,9 @@ class GenreViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Create
         return [IsAuthenticated()]
 
 
-class ActorViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin):
+class ActorViewSet(viewsets.GenericViewSet,
+                   mixins.ListModelMixin,
+                   mixins.CreateModelMixin):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
     authentication_classes = (TokenAuthentication,)
@@ -44,7 +48,9 @@ class ActorViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Create
         return [IsAuthenticated()]
 
 
-class CinemaHallViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin):
+class CinemaHallViewSet(viewsets.GenericViewSet,
+                        mixins.ListModelMixin,
+                        mixins.CreateModelMixin):
     queryset = CinemaHall.objects.all()
     serializer_class = CinemaHallSerializer
     authentication_classes = (TokenAuthentication,)
@@ -55,7 +61,10 @@ class CinemaHallViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.C
         return [IsAuthenticated()]
 
 
-class MovieViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin):
+class MovieViewSet(viewsets.GenericViewSet,
+                   mixins.ListModelMixin,
+                   mixins.CreateModelMixin,
+                   mixins.RetrieveModelMixin):
     queryset = Movie.objects.prefetch_related("genres", "actors")
     authentication_classes = (TokenAuthentication,)
 
@@ -71,8 +80,12 @@ class MovieViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Create
             return MovieDetailSerializer
         return MovieSerializer
 
-class MovieSessionViewSet(viewsets.ModelViewSet):
-    queryset = MovieSession.objects.all().select_related("movie", "cinema_hall")
+
+class MovieSessionViewSet(
+    viewsets.ModelViewSet
+):
+    queryset = MovieSession.objects.all().select_related("movie",
+                                                         "cinema_hall")
     authentication_classes = (TokenAuthentication,)
 
     def get_permissions(self):
@@ -93,8 +106,14 @@ class OrderPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class OrderViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin):
-    queryset = Order.objects.prefetch_related("tickets__movie_session__movie", "tickets__movie_session__cinema_hall")
+class OrderViewSet(viewsets.GenericViewSet,
+                   mixins.ListModelMixin,
+                   mixins.CreateModelMixin):
+    queryset = Order.objects.prefetch_related(
+
+        "tickets__movie_session__movie",
+        "tickets__movie_session__cinema_hall"
+    )
     serializer_class = OrderSerializer
     pagination_class = OrderPagination
     authentication_classes = (TokenAuthentication,)
